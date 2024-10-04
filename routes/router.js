@@ -1,14 +1,17 @@
 const express = require("express");
 const router = express.Router();
 const Contact = require("../model/contactSchema");
-const multer = require("multer");
-const upload = multer();
+const upload = require("../middleware/uploadFile");
 
-router.post("/contactMe", upload.none(), async (req, res) => {
+router.post("/contactMe", upload.single("files"), async (req, res) => {
   const { name, email, opportunity, companyName, message, contact } = req.body;
+  const file = req.file;
   if (!name || !email || !opportunity || !companyName || !message || !contact) {
-    return res.status(422).json({ error: "Fill the fields properly" });
+    return res
+      .status(422)
+      .json({ error: "Please fill all the fields properly" });
   }
+
   try {
     const newUser = new Contact({
       name,
@@ -17,15 +20,15 @@ router.post("/contactMe", upload.none(), async (req, res) => {
       companyName,
       message,
       contact,
+      files: file ? file.path : null,
     });
-    const creatNewUser = await newUser.save();
-    if (creatNewUser) {
-      res.status(201).json({ message: "User Created Successfully!!" });
+
+    const createdNewUser = await newUser.save();
+    if (createdNewUser) {
+      res.status(201).json({ message: "User Created Successfully!" });
     }
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Error in creating contact", error: error });
+    res.status(500).json({ message: "Error in creating contact", error });
   }
 });
 
