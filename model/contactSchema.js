@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const validator = require("validator");
+// const validator = require("validator");
 
 const contactSchema = mongoose.Schema(
   {
@@ -8,12 +8,12 @@ const contactSchema = mongoose.Schema(
     },
     email: {
       type: String,
-      unique: [true, "Email id already present"],
-      validate(value) {
-        if (!validator.isEmail(value)) {
-          throw new Error("Invalid Email");
-        }
-      },
+      // unique: [true, "Email id already present"],
+      // validate(value) {
+      //   if (!validator.isEmail(value)) {
+      //     throw new Error("Invalid Email");
+      //   }
+      // },
     },
     opportunity: {
       type: String,
@@ -27,9 +27,9 @@ const contactSchema = mongoose.Schema(
     contact: {
       type: String,
     },
-    // file: {
-    //   type: String,
-    // },
+    files: {
+      type: String,
+    },
   },
   { versionKey: false }
 );
